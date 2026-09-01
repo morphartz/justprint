@@ -1,27 +1,25 @@
-# JUST PRINT.
+# JUST PRINT
 
-Premium personalized T-shirt storefront for Algeria, rebuilt from the supplied ZERØ ecommerce specification and adapted to the JUST PRINT brand.
+Premium monochrome personalized T-shirt commerce platform for Algeria.
 
-## Included
-- Responsive storefront and product catalog
-- Product detail pages with size/color selection
-- Working browser cart with quantity controls and persistence
-- Custom T-shirt studio with live text preview, font, placement, color and size controls
-- Cash-on-delivery checkout with Algerian delivery fields
-- Browser-persisted order confirmation
-- Lightweight admin screen for local order review
-- Supabase-ready database schema for persistent products, variants, inventory, carts, orders and personalizations
+## Stack
+Next.js 15 · React 19 · TypeScript · Tailwind CSS · Supabase Auth/PostgreSQL/Storage.
 
-## Run
-```bash
-npm install
-npm run dev
-```
+## Customer flow
+Browse → choose variant → personalize → upload artwork → cart → server-validated checkout → order number → live status timeline.
 
-Open `http://localhost:3000`.
+## Admin
+Protected `/admin` area with product CRUD, orders/status updates, inventory, customers, personalization queue, analytics and shipping settings. Admin authorization is enforced by Supabase `user_profiles.is_admin` plus RLS.
 
-## Supabase
-The storefront works in demo/local mode without credentials. For production persistence, create a Supabase project and run `supabase/schema.sql`, then wire the server/client helpers and authenticated admin policies to your project. Never commit service-role keys or `.env` files.
+## Setup
+1. Copy `.env.example` to `.env.local`.
+2. Add your Supabase project URL, anon key and server-only service-role key.
+3. Run `supabase/schema.sql` in the Supabase SQL editor.
+4. Create an Auth user, then set that user's `user_profiles.is_admin=true` using a secure server/admin workflow.
+5. Create/confirm the private `artwork` Storage bucket. The SQL migration creates it when permitted.
+6. `npm install && npm run dev`.
+
+Never expose or commit `SUPABASE_SERVICE_ROLE_KEY`. The browser only receives the public anon key.
 
 ## Production notes
-Image URLs in the starter catalog are remote Unsplash assets and can be replaced from the admin/catalog layer when persistent storage is connected. The checkout currently records orders locally and is intentionally ready for a Supabase-backed order API rather than pretending a browser localStorage order is a payment processor. Humanity has suffered enough fake checkout buttons.
+Checkout calls a Postgres `place_order` transaction. Product prices and inventory are re-read server-side, stock is locked and decremented atomically, order items are persisted, and status history begins at `new`. Artwork uploads are restricted to PNG/JPEG/WEBP/SVG and 8MB through the server endpoint.
