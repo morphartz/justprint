@@ -1,0 +1,4 @@
+'use client';
+import Link from 'next/link';import {ShoppingBag} from 'lucide-react';import {useCart} from '@/components/cart';
+export function Header(){const {count}=useCart();return <header className="header"><div className="bar"><Link href="/" className="logo">JUST PRINT<span>.</span></Link><nav><Link href="/shop">Shop</Link><Link href="/customize">Customize</Link><Link href="/admin">Admin</Link></nav><Link href="/cart" className="bag"><ShoppingBag size={19}/>{count>0&&<b>{count}</b>}</Link></div></header>}
+export function Footer(){return <footer><div><strong>JUST PRINT.</strong><p>Premium blanks. Professional printing. Your idea.</p></div><div className="footlinks"><Link href="/shop">Shop</Link><Link href="/customize">Custom printing</Link><Link href="/cart">Cart</Link></div><small>© 2026 JUST PRINT. Algeria.</small></footer>}
